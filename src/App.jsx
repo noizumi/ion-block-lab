@@ -182,7 +182,7 @@ const ELEMENTS = [
   { z: 4,  sym: "Be", name: "ベリリウム", ans: "2+",   ionName: "ベリリウムイオン" },
   //{ z: 5,  sym: "B",  name: "ホウ素",     ans: "none", note: "ホウ素は最外殻電子の数が中途半端で、単原子イオンになりにくい" },
   //{ z: 6,  sym: "C",  name: "炭素",       ans: "none", note: "炭素は最外殻電子の数が中途半端で、単原子イオンになりにくい" },
-  { z: 7,  sym: "N",  name: "窒素",       ans: "3-",   ionName: "窒化物イオン" },
+  //{ z: 7,  sym: "N",  name: "窒素",       ans: "3-",   ionName: "窒化物イオン" },
   { z: 8,  sym: "O",  name: "酸素",       ans: "2-",   ionName: "酸化物イオン" },
   { z: 9,  sym: "F",  name: "フッ素",     ans: "-",    ionName: "フッ化物イオン" },
   { z: 10, sym: "Ne", name: "ネオン",     ans: "none", note: "貴ガスは安定で、イオンになりにくい" },
