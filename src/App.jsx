@@ -143,10 +143,10 @@ const QUIZ = [
    ミスした問題は終了後に「復習」できる。 */
 
 /* ▼ 授業に合わせて調整しやすい設定値 ▼ */
-const TA_SET = { lv1: 2, lv2: 5, lv3: 3 }; // 計10問（★2・★3中心。出題順はランダム）
+const TA_SET = { lv1: 2, lv2: 4, lv3: 4 }; // 計10問（★2・★3中心。出題順はランダム）
 const TA_TOTAL = TA_SET.lv1 + TA_SET.lv2 + TA_SET.lv3;
 const TA_MISS_LIMIT = 10; // これ以上ミスすると記録対象外
-const TA_CELEB_MS = 2000; // 正解時にブロック・組成式・物質名を見せる時間（この間タイムは停止）
+const TA_CELEB_MS = 700; // 正解時にブロック・組成式・物質名を見せる時間（この間タイムは停止）
 const MAX_BLOCKS = 6;     // 1種類のイオンにつき置けるブロックの上限（レイアウト保護）
 
 /* ===== ベスト記録の永続化（端末ローカル） ===== */
@@ -180,8 +180,8 @@ const ELEMENTS = [
   { z: 2,  sym: "He", name: "ヘリウム",   ans: "none", note: "貴ガスは安定で、イオンになりにくい" },
   { z: 3,  sym: "Li", name: "リチウム",   ans: "+",    ionName: "リチウムイオン" },
   { z: 4,  sym: "Be", name: "ベリリウム", ans: "2+",   ionName: "ベリリウムイオン" },
-  { z: 5,  sym: "B",  name: "ホウ素",     ans: "none", note: "ホウ素は単原子イオンをほとんどつくらない" },
-  { z: 6,  sym: "C",  name: "炭素",       ans: "none", note: "炭素は単原子イオンになりにくい" },
+  //{ z: 5,  sym: "B",  name: "ホウ素",     ans: "none", note: "ホウ素は最外殻電子の数が中途半端で、単原子イオンになりにくい" },
+  //{ z: 6,  sym: "C",  name: "炭素",       ans: "none", note: "炭素は最外殻電子の数が中途半端で、単原子イオンになりにくい" },
   { z: 7,  sym: "N",  name: "窒素",       ans: "3-",   ionName: "窒化物イオン" },
   { z: 8,  sym: "O",  name: "酸素",       ans: "2-",   ionName: "酸化物イオン" },
   { z: 9,  sym: "F",  name: "フッ素",     ans: "-",    ionName: "フッ化物イオン" },
@@ -189,8 +189,8 @@ const ELEMENTS = [
   { z: 11, sym: "Na", name: "ナトリウム", ans: "+",    ionName: "ナトリウムイオン" },
   { z: 12, sym: "Mg", name: "マグネシウム", ans: "2+", ionName: "マグネシウムイオン" },
   { z: 13, sym: "Al", name: "アルミニウム", ans: "3+", ionName: "アルミニウムイオン" },
-  { z: 14, sym: "Si", name: "ケイ素",     ans: "none", note: "ケイ素は単原子イオンになりにくい" },
-  { z: 15, sym: "P",  name: "リン",       ans: "3-",   ionName: "リン化物イオン" },
+  //{ z: 14, sym: "Si", name: "ケイ素",     ans: "none", note: "ケイ素は最外殻電子の数が中途半端で、単原子イオンになりにくい" },
+  //{ z: 15, sym: "P",  name: "リン",       ans: "3-",   ionName: "リン化物イオン" },
   { z: 16, sym: "S",  name: "硫黄",       ans: "2-",   ionName: "硫化物イオン" },
   { z: 17, sym: "Cl", name: "塩素",       ans: "-",    ionName: "塩化物イオン" },
   { z: 18, sym: "Ar", name: "アルゴン",   ans: "none", note: "貴ガスは安定で、イオンになりにくい" },
@@ -207,7 +207,7 @@ const CHARGE_CHOICES = [
 const ANS_LABEL = Object.fromEntries(CHARGE_CHOICES);
 const CHARGE_TOTAL = ELEMENTS.length;
 const CHARGE_MISS_LIMIT = 10;  // これ以上ミスすると記録対象外
-const CHARGE_CELEB_MS = 1400;  // 正解表示の時間（この間タイムは停止）
+const CHARGE_CELEB_MS = 700;  // 正解表示の時間（この間タイムは停止）
 
 function gradeForChargeSeconds(sec) {
   /* ▼ グレードの閾値（秒）。生徒の実態に合わせて調整可 ▼ */
@@ -233,19 +233,19 @@ function gradeForChargeSeconds(sec) {
 
 function gradeForSeconds(sec) {
   /* ▼ グレードの閾値（秒）。生徒の実態に合わせて調整可 ▼ */
-  if (sec < 120) {
+  if (sec < 30) {
     return { grade: "SS", title: "イオン結合レジェンド!!!",
-      comment: "120秒切りは伝説級。組成式を完全に手の内に入れています。" };
+      comment: "30秒切りは伝説級。組成式を完全に手の内に入れています。" };
   }
-  if (sec <= 180) {
+  if (sec <= 60) {
     return { grade: "S", title: "組成式マスター!!",
       comment: "見事です。イオンの組み合わせが反射的に分かっています。" };
   }
-  if (sec <= 250) {
+  if (sec <= 90) {
     return { grade: "A", title: "すばらしい！",
       comment: "良いペースです。あと少しでSに届きます。" };
   }
-  if (sec <= 340) {
+  if (sec <= 120) {
     return { grade: "B", title: "順調！",
       comment: "迷った物質を復習すると、タイムが大きく縮みます。" };
   }
@@ -1450,6 +1450,7 @@ export default function IonBlockLab() {
           <div style={{ fontSize: "0.88rem", color: "rgba(241,245,249,0.78)", margin: "10px 0 14px", lineHeight: 1.9, textAlign: "left", maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>
             ・原子番号 <b>1〜20</b> の元素記号が<b>ランダムな順に1回ずつ</b>表示されます。その元素の単原子イオンの電荷を選んでください。<br />
             ・全 {CHARGE_TOTAL} 問を答え終わるまでの<b>タイム</b>を競います。誤りはミスとして数え、正解するまで同じ元素に挑戦します。<br />
+            ・単原子イオンになりやすく中高でよく登場する元素と、貴ガスとが出題されます。<br />
             ・正解すると、イオンの化学式と名前がしばらく表示されます。<b>この間タイムは停止します</b>。<br />
             ・タイムに応じて <b>SS／S／A／B／C</b> のグレードを判定。ミスが {CHARGE_MISS_LIMIT} 回以上の場合、記録は残りません。<br />
             ・ミスした元素は、終了後にまとめて復習できます。
