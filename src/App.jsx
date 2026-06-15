@@ -198,7 +198,7 @@ const ELEMENTS = [
   { z: 20, sym: "Ca", name: "カルシウム", ans: "2+",   ionName: "カルシウムイオン" },
   { z: 29, sym: "Cu", name: "銅", ans: "2+",   ionName: "銅イオン" },
   { z: 30, sym: "Zn", name: "亜鉛", ans: "2+",   ionName: "亜鉛イオン" },
-  { z: 47, sym: "Ag", name: "銀", ans: "2+",   ionName: "銀イオン" },
+  { z: 47, sym: "Ag", name: "銀", ans: "+",   ionName: "銀イオン" },
   { z: 56, sym: "Ba", name: "バリウム", ans: "2+",   ionName: "バリウムイオン" },
   { z: 82, sym: "Pb", name: "鉛", ans: "2+",   ionName: "鉛イオン" },
 ];
