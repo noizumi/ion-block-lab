@@ -146,7 +146,7 @@ const QUIZ = [
 const TA_SET = { lv1: 2, lv2: 4, lv3: 4 }; // 計10問（★2・★3中心。出題順はランダム）
 const TA_TOTAL = TA_SET.lv1 + TA_SET.lv2 + TA_SET.lv3;
 const TA_MISS_LIMIT = 10; // これ以上ミスすると記録対象外
-const TA_CELEB_MS = 700; // 正解時にブロック・組成式・物質名を見せる時間（この間タイムは停止）
+const TA_CELEB_MS = 900; // 正解時にブロック・組成式・物質名を見せる時間（この間タイムは停止）
 const MAX_BLOCKS = 6;     // 1種類のイオンにつき置けるブロックの上限（レイアウト保護）
 
 /* ===== ベスト記録の永続化（端末ローカル） ===== */
@@ -170,7 +170,7 @@ function writeBest(key, sec) {
   }
 }
 
-/* ================= 電荷クイズ（原子番号1〜20） =================
+/* ================= 電荷クイズ =================
    元素記号クイズと同形式：全元素を1回ずつランダム順に出題し、
    解き切るまでのタイムを競う。誤答はミスとして数え、正解するまで
    同じ元素に挑戦。タイムでグレード判定、ミスした元素は復習できる。
@@ -196,6 +196,11 @@ const ELEMENTS = [
   { z: 18, sym: "Ar", name: "アルゴン",   ans: "none", note: "貴ガスは安定で、イオンになりにくい" },
   { z: 19, sym: "K",  name: "カリウム",   ans: "+",    ionName: "カリウムイオン" },
   { z: 20, sym: "Ca", name: "カルシウム", ans: "2+",   ionName: "カルシウムイオン" },
+  { z: 29, sym: "Cu", name: "銅", ans: "2+",   ionName: "銅イオン" },
+  { z: 30, sym: "Zn", name: "亜鉛", ans: "2+",   ionName: "亜鉛イオン" },
+  { z: 47, sym: "Ag", name: "銀", ans: "2+",   ionName: "銀イオン" },
+  { z: 56, sym: "Ba", name: "バリウム", ans: "2+",   ionName: "バリウムイオン" },
+  { z: 82, sym: "Pb", name: "鉛", ans: "2+",   ionName: "鉛イオン" },
 ];
 
 /* 解答ボタン（左から並べる順） */
@@ -207,23 +212,23 @@ const CHARGE_CHOICES = [
 const ANS_LABEL = Object.fromEntries(CHARGE_CHOICES);
 const CHARGE_TOTAL = ELEMENTS.length;
 const CHARGE_MISS_LIMIT = 10;  // これ以上ミスすると記録対象外
-const CHARGE_CELEB_MS = 700;  // 正解表示の時間（この間タイムは停止）
+const CHARGE_CELEB_MS = 900;  // 正解表示の時間（この間タイムは停止）
 
 function gradeForChargeSeconds(sec) {
   /* ▼ グレードの閾値（秒）。生徒の実態に合わせて調整可 ▼ */
-  if (sec < 30) {
+  if (sec < 15) {
     return { grade: "SS", title: "イオン電荷レジェンド!!!",
       comment: "30秒切りは伝説級。周期表とイオンが頭の中でつながっています。" };
   }
-  if (sec <= 60) {
+  if (sec <= 30) {
     return { grade: "S", title: "電荷マスター!!",
       comment: "見事です。族と電荷の関係が反射的に分かっています。" };
   }
-  if (sec <= 90) {
+  if (sec <= 60) {
     return { grade: "A", title: "すばらしい！",
       comment: "良いペースです。あと少しでSに届きます。" };
   }
-  if (sec <= 120) {
+  if (sec <= 90) {
     return { grade: "B", title: "順調！",
       comment: "迷った元素は周期表の縦の並び（族）で整理しましょう。" };
   }
@@ -1448,7 +1453,7 @@ export default function IonBlockLab() {
         <div style={{ textAlign: "center", padding: "8px 0" }}>
           <div style={{ fontWeight: 800, fontSize: "1.1rem", color: C.ink }}>電荷クイズ ── 単原子イオンの電荷</div>
           <div style={{ fontSize: "0.88rem", color: "rgba(241,245,249,0.78)", margin: "10px 0 14px", lineHeight: 1.9, textAlign: "left", maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>
-            ・原子番号 <b>1〜20</b> の元素記号が<b>ランダムな順に1回ずつ</b>表示されます。その元素の単原子イオンの電荷を選んでください。<br />
+            ・元素記号が<b>ランダムな順に1回ずつ</b>表示されます。その元素の単原子イオンの電荷を選んでください。<br />
             ・全 {CHARGE_TOTAL} 問を答え終わるまでの<b>タイム</b>を競います。誤りはミスとして数え、正解するまで同じ元素に挑戦します。<br />
             ・単原子イオンになりやすく中高でよく登場する元素と、貴ガスとが出題されます。<br />
             ・正解すると、イオンの化学式と名前がしばらく表示されます。<b>この間タイムは停止します</b>。<br />
