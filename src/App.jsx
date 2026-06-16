@@ -1129,6 +1129,13 @@ export default function IonBlockLab() {
   );
 
   /* ---------- 組み立てスペース ---------- */
+  // かみ合った（電荷がつり合った）ときだけハイライト。最簡比の単位を1ユニットとし、
+  // g 個のユニットに分けて表示する（最簡比なら g=1＝全体が1ユニット）。
+  const highlighted = balanced && !!cat && !!an;
+  const unitN = highlighted ? g : 1;
+  const catPer = highlighted ? catCount / g : catCount;
+  const anPer = highlighted ? anCount / g : anCount;
+
   const workspace = (
     <div style={cardStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
@@ -1138,28 +1145,48 @@ export default function IonBlockLab() {
         </button>
       </div>
 
+      {/* ブロックがちょうどかみ合うと、かみ合うユニット（最簡比の単位）ごとに
+         ハイライトする。最簡比（g=1）なら1ユニット＝全体、最簡比でなければ
+         同じユニットが g 個並ぶので「もっと単純な組み合わせがある」ことが分かる。
+         枠は border＋inset影だけで描き、ブロックの外側にはみ出さないので
+         スクロール領域で見切れない。枠ぶんの余白（border+padding）は
+         ハイライトの有無に関わらず常に確保し、ブロック位置がずれないようにする。 */}
       <div style={{ overflowX: "auto", paddingBottom: 4 }}>
-        <div style={{ minWidth: Math.max(plusTotal, minusTotal, 3) * UNIT + 20, paddingTop: 2 }}>
-          <div style={{ display: "flex", gap: 3, height: 52, marginBottom: STUD_H + 2, alignItems: "flex-start" }}>
-            {cat && Array.from({ length: catCount }).map((_, i) => (
-              <CationBlock key={i} ion={cat} onClick={removeCat} />
-            ))}
-            {!cat && (
-              <div style={{ height: 52, display: "flex", alignItems: "center", color: "rgba(241,245,249,0.5)", fontSize: "0.82rem" }}>
-                陽イオン（赤）のブロックを選んでください
+        <div style={{
+          display: "inline-flex", gap: highlighted ? 12 : 3, alignItems: "flex-start", paddingTop: 2,
+          minWidth: highlighted ? undefined : Math.max(plusTotal, minusTotal, 3) * UNIT + 20,
+        }}>
+          {Array.from({ length: unitN }).map((_, u) => (
+            <div key={u} style={{
+              borderRadius: 12, padding: 6,
+              border: highlighted ? "2px solid rgba(52,211,153,0.9)" : "2px solid transparent",
+              background: highlighted ? "rgba(52,211,153,0.12)" : "transparent",
+              boxShadow: highlighted ? "inset 0 0 12px rgba(52,211,153,0.35)" : "none",
+              animation: highlighted ? "meshPulse 1.6s ease-in-out infinite" : "none",
+              transition: "background 0.25s, border-color 0.25s",
+            }}>
+              <div style={{ display: "flex", gap: 3, height: 52, marginBottom: STUD_H + 2, alignItems: "flex-start" }}>
+                {cat && Array.from({ length: catPer }).map((_, i) => (
+                  <CationBlock key={i} ion={cat} onClick={removeCat} />
+                ))}
+                {!cat && u === 0 && (
+                  <div style={{ height: 52, display: "flex", alignItems: "center", color: "rgba(241,245,249,0.5)", fontSize: "0.82rem" }}>
+                    陽イオン（赤）のブロックを選んでください
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <div style={{ display: "flex", gap: 3, height: 52, alignItems: "flex-start" }}>
-            {an && Array.from({ length: anCount }).map((_, i) => (
-              <AnionBlock key={i} ion={an} onClick={removeAn} />
-            ))}
-            {!an && (
-              <div style={{ height: 52, display: "flex", alignItems: "center", color: "rgba(241,245,249,0.5)", fontSize: "0.82rem" }}>
-                陰イオン（青）のブロックを選んでください
+              <div style={{ display: "flex", gap: 3, height: 52, alignItems: "flex-start" }}>
+                {an && Array.from({ length: anPer }).map((_, i) => (
+                  <AnionBlock key={i} ion={an} onClick={removeAn} />
+                ))}
+                {!an && u === 0 && (
+                  <div style={{ height: 52, display: "flex", alignItems: "center", color: "rgba(241,245,249,0.5)", fontSize: "0.82rem" }}>
+                    陰イオン（青）のブロックを選んでください
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -1760,6 +1787,13 @@ export default function IonBlockLab() {
         @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Lexend:wght@600;700&display=swap');
         @keyframes pop { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes slideup { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* かみ合ったユニットの強調。border と inset 影だけで描くので、
+           ブロックの外側にはみ出さず（＝スクロール領域で見切れない）、
+           枠ぶんの余白も常に確保するのでブロック位置もずれない。 */
+        @keyframes meshPulse {
+          0%, 100% { background-color: rgba(52,211,153,0.10); box-shadow: inset 0 0 8px rgba(52,211,153,0.30); }
+          50%      { background-color: rgba(52,211,153,0.20); box-shadow: inset 0 0 16px rgba(52,211,153,0.55); }
+        }
         button:active { transform: translateY(1px); }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         .layout { display: grid; gap: 14px; align-items: start; }
