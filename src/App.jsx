@@ -1138,8 +1138,21 @@ export default function IonBlockLab() {
         </button>
       </div>
 
-      <div style={{ overflowX: "auto", paddingBottom: 4 }}>
-        <div style={{ minWidth: Math.max(plusTotal, minusTotal, 3) * UNIT + 20, paddingTop: 2 }}>
+      <div style={{ overflowX: "auto", overflowY: "visible", paddingBottom: 4 }}>
+        <div style={{
+          display: "inline-block",
+          minWidth: Math.max(plusTotal, minusTotal, 3) * UNIT + 20,
+          paddingTop: 2,
+          ...(balanced ? {
+            // 陽イオンと陰イオンの幅がそろい、ブロックがちょうどかみ合った状態。
+            // 組み上がったブロックの集まり全体を光彩で強調する。
+            padding: "8px 10px",
+            borderRadius: 14,
+            background: "rgba(52,211,153,0.10)",
+            animation: "meshGlow 1.6s ease-in-out infinite, meshPop 0.4s ease-out",
+          } : {}),
+          transition: "background 0.25s",
+        }}>
           <div style={{ display: "flex", gap: 3, height: 52, marginBottom: STUD_H + 2, alignItems: "flex-start" }}>
             {cat && Array.from({ length: catCount }).map((_, i) => (
               <CationBlock key={i} ion={cat} onClick={removeCat} />
@@ -1760,6 +1773,12 @@ export default function IonBlockLab() {
         @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Lexend:wght@600;700&display=swap');
         @keyframes pop { 0% { transform: scale(0.85); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes slideup { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes meshGlow {
+          0%   { box-shadow: 0 0 0 1.5px rgba(52,211,153,0.55), 0 0 10px rgba(52,211,153,0.35); }
+          50%  { box-shadow: 0 0 0 1.5px rgba(52,211,153,0.9), 0 0 22px rgba(52,211,153,0.7); }
+          100% { box-shadow: 0 0 0 1.5px rgba(52,211,153,0.55), 0 0 10px rgba(52,211,153,0.35); }
+        }
+        @keyframes meshPop { 0% { transform: scale(0.97); } 60% { transform: scale(1.02); } 100% { transform: scale(1); } }
         button:active { transform: translateY(1px); }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         .layout { display: grid; gap: 14px; align-items: start; }
