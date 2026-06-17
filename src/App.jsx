@@ -1150,9 +1150,14 @@ export default function IonBlockLab() {
          同じユニットが g 個並ぶので「もっと単純な組み合わせがある」ことが分かる。
          枠は border＋inset影だけで描き、ブロックの外側にはみ出さないので
          スクロール領域で見切れない。枠ぶんの余白（border+padding）は
-         ハイライトの有無に関わらず常に確保し、ブロック位置がずれないようにする。 */}
-      <div style={{ overflowX: "auto", paddingBottom: 4 }}>
-        <div style={{
+         ハイライトの有無に関わらず常に確保し、ブロック位置がずれないようにする。
+
+         出っ張り／くぼみは各ブロック内で UNIT ごとの中央に置かれるが、
+         行内に間隔（gap）があると多価ブロックと一価ブロック複数とで位置が
+         ずれてしまう。行内 gap を 0 にして UNIT の格子をそろえ、価数に
+         よらず出っ張りとくぼみがぴったり重なるようにする。 */}
+      <div style={{ overflowX: "auto", paddingBottom: 6 }}>
+        <div key={successKey} style={{
           display: "inline-flex", gap: highlighted ? 12 : 3, alignItems: "flex-start", paddingTop: 2,
           minWidth: highlighted ? undefined : Math.max(plusTotal, minusTotal, 3) * UNIT + 20,
         }}>
@@ -1162,10 +1167,11 @@ export default function IonBlockLab() {
               border: highlighted ? "2px solid rgba(52,211,153,0.9)" : "2px solid transparent",
               background: highlighted ? "rgba(52,211,153,0.12)" : "transparent",
               boxShadow: highlighted ? "inset 0 0 12px rgba(52,211,153,0.35)" : "none",
-              animation: highlighted ? "meshPulse 1.6s ease-in-out infinite" : "none",
+              // かみ合った瞬間、ユニットが軽く沈み込んで「カチッ」とはまる演出。
+              animation: highlighted ? "meshSeat 0.45s cubic-bezier(0.2,1.2,0.3,1), meshPulse 1.6s ease-in-out infinite" : "none",
               transition: "background 0.25s, border-color 0.25s",
             }}>
-              <div style={{ display: "flex", gap: 3, height: 52, marginBottom: STUD_H + 2, alignItems: "flex-start" }}>
+              <div style={{ display: "flex", gap: 0, height: 52, marginBottom: highlighted ? STUD_H - 4 : STUD_H + 2, alignItems: "flex-start", transition: "margin-bottom 0.2s" }}>
                 {cat && Array.from({ length: catPer }).map((_, i) => (
                   <CationBlock key={i} ion={cat} onClick={removeCat} />
                 ))}
@@ -1175,7 +1181,9 @@ export default function IonBlockLab() {
                   </div>
                 )}
               </div>
-              <div style={{ display: "flex", gap: 3, height: 52, alignItems: "flex-start" }}>
+              {/* かみ合い時は陰イオンの行が下からせり上がって出っ張りにはまる */}
+              <div style={{ display: "flex", gap: 0, height: 52, alignItems: "flex-start",
+                animation: highlighted ? "meshSnap 0.45s cubic-bezier(0.2,1.4,0.3,1)" : "none" }}>
                 {an && Array.from({ length: anPer }).map((_, i) => (
                   <AnionBlock key={i} ion={an} onClick={removeAn} />
                 ))}
@@ -1793,6 +1801,19 @@ export default function IonBlockLab() {
         @keyframes meshPulse {
           0%, 100% { background-color: rgba(52,211,153,0.10); box-shadow: inset 0 0 8px rgba(52,211,153,0.30); }
           50%      { background-color: rgba(52,211,153,0.20); box-shadow: inset 0 0 16px rgba(52,211,153,0.55); }
+        }
+        /* かみ合った瞬間の演出：ユニットが軽く沈み込み（meshSeat）、
+           陰イオンの行が下からせり上がって出っ張りにはまる（meshSnap）。 */
+        @keyframes meshSeat {
+          0%   { transform: scale(1); }
+          45%  { transform: scale(0.965); }
+          100% { transform: scale(1); }
+        }
+        @keyframes meshSnap {
+          0%   { transform: translateY(9px); }
+          55%  { transform: translateY(-2px); }
+          78%  { transform: translateY(1px); }
+          100% { transform: translateY(0); }
         }
         button:active { transform: translateY(1px); }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
