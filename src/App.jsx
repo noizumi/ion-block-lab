@@ -146,7 +146,7 @@ const QUIZ = [
 const TA_SET = { lv1: 2, lv2: 4, lv3: 4 }; // 計10問（★2・★3中心。出題順はランダム）
 const TA_TOTAL = TA_SET.lv1 + TA_SET.lv2 + TA_SET.lv3;
 const TA_MISS_LIMIT = 10; // これ以上ミスすると記録対象外
-const TA_CELEB_MS = 900; // 正解時にブロック・組成式・物質名を見せる時間（この間タイムは停止）
+const TA_CELEB_MS = 1000; // 正解時にブロック・組成式・物質名を見せる時間（この間タイムは停止）
 const MAX_BLOCKS = 6;     // 1種類のイオンにつき置けるブロックの上限（レイアウト保護）
 
 /* ===== ベスト記録の永続化（端末ローカル） ===== */
@@ -212,7 +212,7 @@ const CHARGE_CHOICES = [
 const ANS_LABEL = Object.fromEntries(CHARGE_CHOICES);
 const CHARGE_TOTAL = ELEMENTS.length;
 const CHARGE_MISS_LIMIT = 10;  // これ以上ミスすると記録対象外
-const CHARGE_CELEB_MS = 900;  // 正解表示の時間（この間タイムは停止）
+const CHARGE_CELEB_MS = 1000;  // 正解表示の時間（この間タイムは停止）
 
 function gradeForChargeSeconds(sec) {
   /* ▼ グレードの閾値（秒）。生徒の実態に合わせて調整可 ▼ */
