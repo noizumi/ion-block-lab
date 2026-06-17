@@ -397,12 +397,14 @@ function answerParts(q) {
 const UNIT = 54;
 const STUD_H = 9;
 
-function CationBlock({ ion, onClick }) {
+function CationBlock({ ion, onClick, seated }) {
   return (
     <div onClick={onClick} title="タップで取り外す" style={{
       position: "relative", width: ion.charge * UNIT, height: 52, background: ion.color,
       color: "#fff", borderRadius: 10, display: "flex", alignItems: "center",
       justifyContent: "center", cursor: "pointer", flexShrink: 0, userSelect: "none",
+      // かみ合い時は陽イオンを手前に描画し、出っ張りが陰イオンのくぼみの上に重なるようにする
+      zIndex: seated ? 2 : "auto",
       boxShadow: "inset 0 3px 0 rgba(255,255,255,0.35), inset 0 -3px 0 rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.45)",
     }}>
       <IonFormula ion={ion} size="1.05rem" />
@@ -1171,9 +1173,11 @@ export default function IonBlockLab() {
               animation: highlighted ? "meshSeat 0.45s cubic-bezier(0.2,1.2,0.3,1), meshPulse 1.6s ease-in-out infinite" : "none",
               transition: "background 0.25s, border-color 0.25s",
             }}>
-              <div style={{ display: "flex", gap: 0, height: 52, marginBottom: highlighted ? STUD_H - 4 : STUD_H + 2, alignItems: "flex-start", transition: "margin-bottom 0.2s" }}>
+              {/* かみ合い時は行間を 0 にして、陽イオンの出っ張り（下にはみ出す分）が
+                 陰イオンのくぼみの上に重なるようにする（本体同士は重ねない）。 */}
+              <div style={{ display: "flex", gap: 0, height: 52, marginBottom: highlighted ? 0 : STUD_H + 2, alignItems: "flex-start", transition: "margin-bottom 0.2s" }}>
                 {cat && Array.from({ length: catPer }).map((_, i) => (
-                  <CationBlock key={i} ion={cat} onClick={removeCat} />
+                  <CationBlock key={i} ion={cat} onClick={removeCat} seated={highlighted} />
                 ))}
                 {!cat && u === 0 && (
                   <div style={{ height: 52, display: "flex", alignItems: "center", color: "rgba(241,245,249,0.5)", fontSize: "0.82rem" }}>
