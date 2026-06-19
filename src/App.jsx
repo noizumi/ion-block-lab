@@ -218,7 +218,7 @@ function gradeForChargeSeconds(sec) {
   /* ▼ グレードの閾値（秒）。生徒の実態に合わせて調整可 ▼ */
   if (sec < 15) {
     return { grade: "SS", title: "イオン電荷レジェンド!!!",
-      comment: "30秒切りは伝説級。周期表とイオンが頭の中でつながっています。" };
+      comment: "15秒切りは伝説級。周期表とイオンが頭の中でつながっています。" };
   }
   if (sec <= 30) {
     return { grade: "S", title: "電荷マスター!!",
